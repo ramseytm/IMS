@@ -49,10 +49,10 @@ namespace IMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InventoryItems",
+                name: "InventoryInventory",
                 columns: table => new
                 {
-                    InventoryItemId = table.Column<int>(type: "int", nullable: false)
+                    InventoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -60,7 +60,7 @@ namespace IMS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InventoryItems", x => x.InventoryItemId);
+                    table.PrimaryKey("PK_InventoryInventory", x => x.InventoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,7 +227,7 @@ namespace IMS.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "InventoryItems");
+                name: "InventoryInventory");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
