@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0j3aNW+XUnsBV1NdE1Dg2lhGFzF//fE1y1MJNqswEqTMEDjkkZdTioF2Nn+GyDz0Z6aYc+We6WVCcjCVl/10WA==",
+  "dgSpecHash": "Znbm3dOKRhK4ocAw9vCDvT9tENP7TafNhsQwRFylaa/wh5OmfWdMFb1XTfE6MrdnfB+enHnP2X1BgCl36A2Q2w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\IMS\\IMS.API.csproj",
+  "projectFilePath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\Infrastructure\\IMS.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ken.mcdonald\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\ken.mcdonald\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.20\\microsoft.aspnetcore.cryptography.internal.6.0.20.nupkg.sha512",

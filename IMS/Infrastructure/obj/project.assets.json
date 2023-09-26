@@ -1019,21 +1019,6 @@
             "rid": "win"
           }
         }
-      },
-      "IMS.Infrastructure/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.20",
-          "Microsoft.AspNetCore.Identity.UI": "6.0.20",
-          "Swashbuckle.AspNetCore": "6.2.3"
-        },
-        "compile": {
-          "bin/placeholder/IMS.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/IMS.Infrastructure.dll": {}
-        }
       }
     }
   },
@@ -2635,16 +2620,10 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
-    },
-    "IMS.Infrastructure/1.0.0": {
-      "type": "project",
-      "path": "../Infrastructure/IMS.Infrastructure.csproj",
-      "msbuildProject": "../Infrastructure/IMS.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "IMS.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.20",
       "Microsoft.AspNetCore.Identity.UI >= 6.0.20",
       "Microsoft.EntityFrameworkCore.Design >= 6.0.20",
@@ -2659,11 +2638,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\IMS\\IMS.API.csproj",
-      "projectName": "IMS.API",
-      "projectPath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\IMS\\IMS.API.csproj",
+      "projectUniqueName": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\Infrastructure\\IMS.Infrastructure.csproj",
+      "projectName": "IMS.Infrastructure",
+      "projectPath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\Infrastructure\\IMS.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\ken.mcdonald\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\IMS\\obj\\",
+      "outputPath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ken.mcdonald\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2679,11 +2658,7 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {
-            "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\Infrastructure\\IMS.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\ken.mcdonald\\source\\repos\\IMS\\IMS\\Infrastructure\\IMS.Infrastructure.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -2737,9 +2712,6 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
-          "Microsoft.AspNetCore.App": {
-            "privateAssets": "none"
-          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
