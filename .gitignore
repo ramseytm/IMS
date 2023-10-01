@@ -475,3 +475,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/IMS/Infrastructure/obj/Debug/net6.0/IMS.Infrastructure.assets.cache
+/IMS/Infrastructure/obj/Debug/net6.0/IMS.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
