@@ -1,3 +1,4 @@
+using IMS.Infrastructure.Models;
 using IMS.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-DbInitializer.Seed(app);
+await DbInitializer.SeedAsync(app);
 
 app.Run();
