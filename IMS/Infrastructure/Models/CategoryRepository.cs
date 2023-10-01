@@ -1,9 +1,7 @@
 ﻿using IMS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IO.Pipelines;
 
-namespace IMS.Models
+namespace IMS.Infrastructure.Models
 {
     public class CategoryRepository : ICategoryRepository
     {
@@ -14,55 +12,45 @@ namespace IMS.Models
             _imsDbContext = imsDbContext;
         }
 
-        public IEnumerable<Category> AllCategories
+        public async Task<IEnumerable<Category>> GetCategoriesAsync(int page, int limit)
         {
-            get
-            {
-                return _imsDbContext.Category;
-            }
-        }
-
-        public IEnumerable<Category> GetCategories(int page, int limit)
-        {
-            return _imsDbContext.Category
+            return await _imsDbContext.Category
                 .OrderBy(c => c.CategoryName)
                 .Skip(page - 1)
                 .Take(limit)
-                .ToList();
-
+                .ToListAsync();
         }
 
-        public Category? GetCategoryById(int id)
+        public async Task<Category?> GetCategoryByIdAsync(int id)
         {
-            return _imsDbContext.Category.FirstOrDefault(c => c.CategoryId == id);
-
+            return await _imsDbContext.Category.FirstOrDefaultAsync(c => c.CategoryId == id);
         }
 
-        public void CreateCategory(Category category)
+        public async Task CreateCategoryAsync(Category category)
         {
+            _ = await _imsDbContext.Category.AddAsync(category);
 
-            _imsDbContext.Category.Add(category);
-
-            _imsDbContext.SaveChanges();
-
+            _ = await _imsDbContext.SaveChangesAsync();
         }
-        public void UpdateCategory(Category category, Category categoryDTO)
+
+        public async Task UpdateCategoryAsync(Category category, Category categoryDto)
         {
-            category.CategoryName = categoryDTO.CategoryName;
-            category.ParentCategory = categoryDTO.ParentCategory;
-            category.Description = categoryDTO.Description;
+            category.CategoryName = categoryDto.CategoryName;
+            category.ParentCategory = categoryDto.ParentCategory;
+            category.Description = categoryDto.Description;
 
-            _imsDbContext.SaveChanges();
-
+            _ = await _imsDbContext.SaveChangesAsync();
         }
 
-        public void DeleteCategory(int id)
+        public async Task DeleteCategoryAsync(int id)
         {
-            _imsDbContext.Remove(id);
+            var category = await _imsDbContext.Category.FirstOrDefaultAsync(c => c.CategoryId == id);
+            if (category != null)
+            {
+                _imsDbContext.Category.Remove(category);
+            }
 
-            _imsDbContext.SaveChanges();
-
+            await _imsDbContext.SaveChangesAsync();
         }
-
     }
 }

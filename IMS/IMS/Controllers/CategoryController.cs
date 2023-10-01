@@ -1,83 +1,73 @@
+using IMS.Infrastructure.Models;
 using IMS.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace IMS.Controllers
+namespace IMS.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryRepository _CategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ICategoryRepository CategoryRepository)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            _CategoryRepository = CategoryRepository;
+            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> Get(int page = 1, int limit = int.MaxValue)
         {
-            var allCategory = _CategoryRepository.AllCategories;
-            return Ok(allCategory);
-        }
-
-        [HttpGet]
-        public IActionResult Get(int page = 1, int limit = 10)
-        {
-            var category = _CategoryRepository.GetCategories(page,limit);
+            var category = await _categoryRepository.GetCategoriesAsync(page, limit);
             return Ok(category);
         }
 
-        [HttpGet("{category_id}")]
-        public IActionResult Get(int categoryId)
+        [HttpGet("{categoryId}")]
+        public async Task<IActionResult> Get(int categoryId)
         {
-            var category = _CategoryRepository.GetCategoryById(categoryId);
+            var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
             return Ok(category);
         }
 
         [HttpPost]
-        public IActionResult Post(Category category)
+        public async Task<IActionResult> Post(Category category)
         {
-            _CategoryRepository.CreateCategory(category);
+            await _categoryRepository.CreateCategoryAsync(category);
 
             return Ok(category);
         }
 
-        [HttpPut("{category_id}")]
-        public async Task<IActionResult> Put(int categoryId, Category categoryDTO)
+        [HttpPut("{categoryId}")]
+        public async Task<IActionResult> Put(int categoryId, Category categoryDto)
         {
-            if (categoryId != categoryDTO.CategoryId)
+            if (categoryId != categoryDto.CategoryId)
             {
                 return BadRequest();
             }
 
-            var category = _CategoryRepository.GetCategoryById(categoryId);
+            var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
             if (category == null)
             {
                 return NotFound();
             }
 
-            _CategoryRepository.UpdateCategory(category, categoryDTO);
+            await _categoryRepository.UpdateCategoryAsync(category, categoryDto);
 
             return Ok();
         }
 
-        [HttpDelete("{category_id}")]
-        public IActionResult DeleteOwner(int categoryId)
+        [HttpDelete("{categoryId}")]
+        public async Task<IActionResult> DeleteOwner(int categoryId)
         {
-            
-            var category = _CategoryRepository.GetCategoryById(categoryId);
+            var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
             if (category == null)
             {
                 return NotFound();
             }
 
-            _CategoryRepository.DeleteCategory(categoryId);
+            await _categoryRepository.DeleteCategoryAsync(categoryId);
 
             return Ok();
-            
-           
         }
     }
 }

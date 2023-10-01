@@ -13,68 +13,68 @@ namespace IMS.Controllers
         {
             _ProductRepository = ProductRepository;
         }
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var allProduct = _ProductRepository.AllProducts;
-            return Ok(allProduct);
-        }
-        [HttpGet]
-        public IActionResult Get(int page = 1, int limit = 10)
-        {
-            var product = _ProductRepository.GetProducts(page, limit);
-            return Ok(product);
-        }
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var allProduct = _ProductRepository.AllProducts;
+        //    return Ok(allProduct);
+        //}
+        //[HttpGet]
+        //public IActionResult Get(int page = 1, int limit = 10)
+        //{
+        //    var product = _ProductRepository.GetProducts(page, limit);
+        //    return Ok(product);
+        //}
 
-        [HttpGet("{product_id}")]
-        public IActionResult Get(int productId)
-        {
-            var product = _ProductRepository.GetProductById(productId);
-            return Ok(product);
-        }
+        //[HttpGet("{product_id}")]
+        //public IActionResult Get(int productId)
+        //{
+        //    var product = _ProductRepository.GetProductById(productId);
+        //    return Ok(product);
+        //}
 
-        [HttpPost]
-        public IActionResult Post(Product product)
-        {
-            _ProductRepository.CreateProduct(product);
+        //[HttpPost]
+        //public IActionResult Post(Product product)
+        //{
+        //    _ProductRepository.CreateProduct(product);
 
-            return Ok(product);
-        }
+        //    return Ok(product);
+        //}
 
-        [HttpPut("{product_id}")]
-        public async Task<IActionResult> Put(int productId, Product productDTO)
-        {
-            if (productId != productDTO.ProductId)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{product_id}")]
+        //public async Task<IActionResult> Put(int productId, Product productDTO)
+        //{
+        //    if (productId != productDTO.ProductId)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var product = _ProductRepository.GetProductById(productId);
-            if (product == null)
-            {
-                return NotFound();
-            }
+        //    var product = _ProductRepository.GetProductById(productId);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _ProductRepository.UpdateProduct(product, productDTO);
+        //    _ProductRepository.UpdateProduct(product, productDTO);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [HttpDelete("{product_id}")]
-        public IActionResult DeleteOwner(int productId)
-        {
+        //[HttpDelete("{product_id}")]
+        //public IActionResult DeleteOwner(int productId)
+        //{
 
-            var product = _ProductRepository.GetProductById(productId);
-            if (product == null)
-            {
-                return NotFound();
-            }
+        //    var product = _ProductRepository.GetProductById(productId);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _ProductRepository.DeleteProduct(productId);
+        //    _ProductRepository.DeleteProduct(productId);
 
-            return Ok();
+        //    return Ok();
 
-        }
+        //}
 
     }
 }
