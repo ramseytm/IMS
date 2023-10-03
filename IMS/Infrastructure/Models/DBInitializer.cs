@@ -1,68 +1,78 @@
 ﻿using IMS.Models;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using  Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
-public static class DbInitializer{
+namespace IMS.Infrastructure.Models;
 
-    public static void Seed(IApplicationBuilder applicationBuilder)    {
+public static class DbInitializer
+{
+    public static async Task SeedAsync(IApplicationBuilder applicationBuilder)
+    {
+        using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+        var serviceProvider = serviceScope.ServiceProvider;
 
-        IMSDbContext context = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IMSDbContext>();
-        ProductRepository _productRepository = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<ProductRepository>();
-        LocationRepository _locationRepository = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<LocationRepository>();
+        await using var dbContext = serviceProvider.GetRequiredService<IMSDbContext>();
+        var productRepository = serviceProvider.GetRequiredService<IProductRepository>();
+        var locationRepository = serviceProvider.GetRequiredService<ILocationRepository>();
 
-        if (!context.Product.Any())
+        _ = await dbContext.Database.EnsureCreatedAsync();
+
+        if (!dbContext.Product.Any())
         {
-            context.AddRange
+            await dbContext.AddRangeAsync
             (
-                new Product { ProductName = "Apple", CategoryID = 1, ManufacturerID = 1, Description = "Its an Apple", UnitPrice = 0.50M, QuantityInStock = Random.Shared.Next(1, 100), MinimumQuantity = 1, MaximumQuantity = 1000, UPC = "055555000010"},
+                new Product { ProductName = "Apple", CategoryID = 1, ManufacturerID = 1, Description = "Its an Apple", UnitPrice = 0.50M, QuantityInStock = Random.Shared.Next(1, 100), MinimumQuantity = 1, MaximumQuantity = 1000, UPC = "055555000010" },
                 new Product { ProductName = "Avocado", CategoryID = 1, ManufacturerID = 1, Description = "Its an Avocado", UnitPrice = 1, QuantityInStock = Random.Shared.Next(1, 100), MinimumQuantity = 1, MaximumQuantity = 1000, UPC = "055555000020" },
                 new Product { ProductName = "Banana", CategoryID = 1, ManufacturerID = 1, Description = "Its a Banana", UnitPrice = 10, QuantityInStock = Random.Shared.Next(1, 100), MinimumQuantity = 1, MaximumQuantity = 1000, UPC = "055555000030" },
                 new Product { ProductName = "Cherry", CategoryID = 1, ManufacturerID = 1, Description = "Its a Cherry", UnitPrice = 0.10M, QuantityInStock = Random.Shared.Next(1, 100), MinimumQuantity = 1, MaximumQuantity = 1000, UPC = "055555000040" },
                 new Product { ProductName = "Tomato", CategoryID = 1, ManufacturerID = 1, Description = "Its a Tomato", UnitPrice = 0.75M, QuantityInStock = Random.Shared.Next(1, 100), MinimumQuantity = 1, MaximumQuantity = 1000, UPC = "055555000050" }
             );
+
+            await dbContext.SaveChangesAsync();
         }
 
-        if (!context.Manufacturer.Any())
+        if (!dbContext.Manufacturer.Any())
         {
-            context.AddRange
+            await dbContext.AddRangeAsync
             (
-                new Manufacturer { ManufacturerName = "Produce Producer", Address = "123 Fake St.", ContactPerson = "Some guy", Email = "SomeGuy@ProduceProducer.net", Phone = "630-555-5555"}
+                new Manufacturer { ManufacturerName = "Produce Producer", Address = "123 Fake St.", ContactPerson = "Some guy", Email = "SomeGuy@ProduceProducer.net", Phone = "630-555-5555" }
             );
+
+            await dbContext.SaveChangesAsync();
         }
 
-        if (!context.Category.Any())
+        if (!dbContext.Category.Any())
         {
-            context.AddRange
+            await dbContext.AddRangeAsync
             (
-                new Category { CategoryName = "Produce", ParentCategory = null, Description = "Produce like fruits and veggies and stuff" }
+                new Category { CategoryName = "Produce", ParentCategory = null, Description = "Produce like fruits and veggies and stuff" },
+                new Category { CategoryName = "Kitchen", ParentCategory = null, Description = "Kitchen utensils, appliances and housewares." }
             );
+
+            await dbContext.SaveChangesAsync();
         }
 
-        if (!context.Location.Any())
+        if (!dbContext.Location.Any())
         {
-            context.AddRange
+            await dbContext.AddRangeAsync
             (
                 new Location { LocationName = "Produce Producer Inc.", ParentLocation = null, Description = "Produce Producer Incorporated head office", MaxCapacity = 10000, CurrentOccupancy = 2000 }
             );
+
+            await dbContext.SaveChangesAsync();
         }
 
-        
-        if (!context.Inventory.Any())        {
+        if (!dbContext.Inventory.Any())
+        {
+            var products = productRepository.GetProducts(1, 5);
+            var location = locationRepository.GetLocations(1, 1).FirstOrDefault();
 
-            IEnumerable<Product> products = _productRepository.GetProducts(1,5);
-            IEnumerable<Location> locations = _locationRepository.GetLocations(1, 1);
+            foreach (var product in products)
+            {
+                _ = await dbContext.AddAsync(new Inventory { Product = product, Location = location, Quantity = 50 });
+            }
 
-            context.AddRange
-            (
-                new Inventory { Product = products.ElementAt(0), Location = locations.First(), Quantity = 50 },
-                new Inventory { Product = products.ElementAt(1), Location = locations.First(), Quantity = 50 },
-                new Inventory { Product = products.ElementAt(2), Location = locations.First(), Quantity = 50 },
-                new Inventory { Product = products.ElementAt(3), Location = locations.First(), Quantity = 50 },
-                new Inventory { Product = products.ElementAt(4), Location = locations.First(), Quantity = 50 }
-            ); ;
+            await dbContext.SaveChangesAsync();
         }
-
-        context.SaveChanges();
     }
 }
