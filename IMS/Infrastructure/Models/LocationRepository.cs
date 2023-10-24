@@ -12,38 +12,30 @@ namespace IMS.Models
             _imsDbContext = imsDbContext;
         }
 
-        public IEnumerable<Location> AllLocations
+        public async Task<IEnumerable<Location>> GetLocationsAsync(int page, int limit)
         {
-            get
-            {
-                return _imsDbContext.Location;
-            }
-        }
-
-        public IEnumerable<Location> GetLocations(int page, int limit)
-        {
-            return _imsDbContext.Location
+            return await _imsDbContext.Location
                 .OrderBy(c => c.LocationName)
                 .Skip(page - 1)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Location? GetLocationById(int id)
+        public async Task<Location?> GetLocationByIdAsync(int id)
         {
-            return _imsDbContext.Location.FirstOrDefault(c => c.LocationId == id);
+            return await _imsDbContext.Location.FirstOrDefaultAsync(c => c.LocationId == id);
 
         }
 
-        public void CreateLocation(Location location)
+        public async Task CreateLocationAsync(Location location)
         {
 
-            _imsDbContext.Location.Add(location);
+            _ = await _imsDbContext.Location.AddAsync(location);
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
-        public void UpdateLocation(Location location, Location locationDTO)
+        public async Task UpdateLocationAsync(Location location, Location locationDTO)
         {
             location.LocationName = locationDTO.LocationName;
             location.ParentLocation = locationDTO.ParentLocation;
@@ -51,15 +43,19 @@ namespace IMS.Models
             location.MaxCapacity = locationDTO.MaxCapacity;
             location.CurrentOccupancy = locationDTO.CurrentOccupancy;
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
 
-        public void DeleteLocation(int id)
+        public async Task DeleteLocationAsync(int id)
         {
-            _imsDbContext.Remove(id);
+            var category = await _imsDbContext.Location.FirstOrDefaultAsync(c => c.LocationId == id);
+            if (category != null)
+            {
+                _imsDbContext.Location.Remove(category);
+            }
 
-            _imsDbContext.SaveChanges();
+            await _imsDbContext.SaveChangesAsync();
 
         }
 

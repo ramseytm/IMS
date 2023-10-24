@@ -1,3 +1,4 @@
+using AutoMapper;
 using IMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,78 +6,78 @@ namespace IMS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class LocationController : ControllerBase
     {
         private readonly ILocationRepository _LocationRepository;
 
-        public LocationController(ILocationRepository LocationRepository)
+        private readonly IMapper _mapper;
+
+        public LocationController(ILocationRepository LocationRepository, IMapper mapper)
         {
             _LocationRepository = LocationRepository;
+            _mapper = mapper;
         }
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var allLocation = _LocationRepository.AllLocations;
-        //    return Ok(allLocation);
-        //}
 
-        //[HttpGet]
-        //public IActionResult Get(int page = 1, int limit = 10)
-        //{
-        //    var location = _LocationRepository.GetLocations(page, limit);
-        //    return Ok(location);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get(int page = 1, int limit = 10)
+        {
+            var location = await _LocationRepository.GetLocationsAsync(page, limit);
+            return Ok(_mapper.Map<IEnumerable<LocationDTO>>(location));
+        }
 
-        //[HttpGet("{location_id}")]
-        //public IActionResult Get(int locationId)
-        //{
-        //    var location = _LocationRepository.GetLocationById(locationId);
-        //    return Ok(location);
-        //}
+        [HttpGet("{location_id}")]
+        public async Task<IActionResult> Get(int locationId)
+        {
+            var location = await _LocationRepository.GetLocationByIdAsync(locationId);
+            return Ok(_mapper.Map<LocationDTO>(location));
+        }
 
-        //[HttpPost]
-        //public IActionResult Post(Location location)
-        //{
-        //    _LocationRepository.CreateLocation(location);
+        [HttpPost]
+        public async Task<IActionResult> Post(LocationDTO locationDTO)
+        {
+            var location = _mapper.Map<Location>(locationDTO);
 
-        //    return Ok(location);
-        //}
+            await _LocationRepository.CreateLocationAsync(location);
 
-        //[HttpPut("{location_id}")]
-        //public async Task<IActionResult> Put(int locationId, Location locationDTO)
-        //{
-        //    if (locationId != locationDTO.LocationId)
-        //    {
-        //        return BadRequest();
-        //    }
+            return Ok(_mapper.Map<LocationDTO>(location));
+        }
 
-        //    var location = _LocationRepository.GetLocationById(locationId);
-        //    if (location == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPut("{location_id}")]
+        public async Task<IActionResult> Put(int locationId, LocationDTO locationDTO)
+        {
+            if (locationId != locationDTO.LocationId)
+            {
+                return BadRequest();
+            }
 
-        //    _LocationRepository.UpdateLocation(location, locationDTO);
+            var location = await _LocationRepository.GetLocationByIdAsync(locationId);
+            if (location == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok();
-        //}
+            await _LocationRepository.UpdateLocationAsync(location, _mapper.Map<Location>(locationDTO));
 
-        //[HttpDelete("{location_id}")]
-        //public IActionResult DeleteOwner(int locationId)
-        //{
+            return Ok();
+        }
 
-        //    var location = _LocationRepository.GetLocationById(locationId);
-        //    if (location == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{location_id}")]
+        public async Task<IActionResult> DeleteOwner(int locationId)
+        {
 
-        //    _LocationRepository.DeleteLocation(locationId);
+            var location = await _LocationRepository.GetLocationByIdAsync(locationId);
+            if (location == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok();
+            await _LocationRepository.DeleteLocationAsync(locationId);
+
+            return Ok();
 
 
-        //}
+        }
 
     }
 }

@@ -64,12 +64,13 @@ public static class DbInitializer
 
         if (!dbContext.Inventory.Any())
         {
-            var products = productRepository.GetProducts(1, 5);
-            var location = locationRepository.GetLocations(1, 1).FirstOrDefault();
+            var products = await productRepository.GetProductsAsync(1, 5);
+            var location = await locationRepository.GetLocationsAsync(1, 1);
 
             foreach (var product in products)
             {
-                _ = await dbContext.AddAsync(new Inventory { Product = product, Location = location, Quantity = 50 });
+                
+                _ = await dbContext.AddAsync(new Inventory { Product = product, Location = location.FirstOrDefault(), Quantity = 50 });
             }
 
             await dbContext.SaveChangesAsync();

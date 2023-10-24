@@ -13,68 +13,63 @@ namespace IMS.Controllers
         {
             _ProductRepository = ProductRepository;
         }
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var allProduct = _ProductRepository.AllProducts;
-        //    return Ok(allProduct);
-        //}
-        //[HttpGet]
-        //public IActionResult Get(int page = 1, int limit = 10)
-        //{
-        //    var product = _ProductRepository.GetProducts(page, limit);
-        //    return Ok(product);
-        //}
 
-        //[HttpGet("{product_id}")]
-        //public IActionResult Get(int productId)
-        //{
-        //    var product = _ProductRepository.GetProductById(productId);
-        //    return Ok(product);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get(int page = 1, int limit = 10)
+        {
+            var product = await _ProductRepository.GetProductsAsync(page, limit);
+            return Ok(product);
+        }
 
-        //[HttpPost]
-        //public IActionResult Post(Product product)
-        //{
-        //    _ProductRepository.CreateProduct(product);
+        [HttpGet("{product_id}")]
+        public async Task<IActionResult> Get(int productId)
+        {
+            var product = await _ProductRepository.GetProductByIdAsync(productId);
+            return Ok(product);
+        }
 
-        //    return Ok(product);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Post(Product product)
+        {
+            await _ProductRepository.CreateProductAsync(product);
 
-        //[HttpPut("{product_id}")]
-        //public async Task<IActionResult> Put(int productId, Product productDTO)
-        //{
-        //    if (productId != productDTO.ProductId)
-        //    {
-        //        return BadRequest();
-        //    }
+            return Ok(product);
+        }
 
-        //    var product = _ProductRepository.GetProductById(productId);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPut("{product_id}")]
+        public async Task<IActionResult> Put(int productId, Product productDTO)
+        {
+            if (productId != productDTO.ProductId)
+            {
+                return BadRequest();
+            }
 
-        //    _ProductRepository.UpdateProduct(product, productDTO);
+            var product = await _ProductRepository.GetProductByIdAsync(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok();
-        //}
+            await _ProductRepository.UpdateProductAsync(product, productDTO);
 
-        //[HttpDelete("{product_id}")]
-        //public IActionResult DeleteOwner(int productId)
-        //{
+            return Ok();
+        }
 
-        //    var product = _ProductRepository.GetProductById(productId);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{product_id}")]
+        public async Task<IActionResult> DeleteOwner(int productId)
+        {
 
-        //    _ProductRepository.DeleteProduct(productId);
+            var product = await _ProductRepository.GetProductByIdAsync(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok();
+            await _ProductRepository.DeleteProductAsync(productId);
 
-        //}
+            return Ok();
+
+        }
 
     }
 }

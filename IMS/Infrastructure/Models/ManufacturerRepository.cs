@@ -12,39 +12,31 @@ namespace IMS.Models
             _imsDbContext = imsDbContext;
         }
 
-        public IEnumerable<Manufacturer> AllManufacturers
+        public async Task<IEnumerable<Manufacturer>> GetManufacturersAsync(int page, int limit)
         {
-            get
-            {
-                return _imsDbContext.Manufacturer;
-            }
-        }
-
-        public IEnumerable<Manufacturer> GetManufacturers(int page, int limit)
-        {
-            return _imsDbContext.Manufacturer
+            return await _imsDbContext.Manufacturer
                 .OrderBy(c => c.ManufacturerName)
                 .Skip(page - 1)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
 
         }
 
-        public Manufacturer? GetManufacturerById(int id)
+        public async Task<Manufacturer?> GetManufacturerByIdAsync(int id)
         {
-            return _imsDbContext.Manufacturer.FirstOrDefault(c => c.ManufacturerId == id);
+            return await _imsDbContext.Manufacturer.FirstOrDefaultAsync(c => c.ManufacturerId == id);
 
         }
 
-        public void CreateManufacturer(Manufacturer manufacturer)
+        public async Task CreateManufacturerAsync(Manufacturer manufacturer)
         {
 
-            _imsDbContext.Manufacturer.Add(manufacturer);
+            _ = await _imsDbContext.Manufacturer.AddAsync(manufacturer);
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
-        public void UpdateManufacturer(Manufacturer manufacturer, Manufacturer manufacturerDTO)
+        public async Task UpdateManufacturerAsync(Manufacturer manufacturer, Manufacturer manufacturerDTO)
         {
             manufacturer.ManufacturerName = manufacturerDTO.ManufacturerName;
             manufacturer.Address = manufacturerDTO.Address;
@@ -52,15 +44,19 @@ namespace IMS.Models
             manufacturer.Email = manufacturerDTO.Email;
             manufacturer.Phone = manufacturerDTO.Phone;
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
 
-        public void DeleteManufacturer(int id)
+        public async Task DeleteManufacturerAsync(int id)
         {
-            _imsDbContext.Remove(id);
+            var manufacturer = await _imsDbContext.Manufacturer.FirstOrDefaultAsync(c => c.ManufacturerId == id);
+            if (manufacturer != null)
+            {
+                _imsDbContext.Manufacturer.Remove(manufacturer);
+            }
 
-            _imsDbContext.SaveChanges();
+            await _imsDbContext.SaveChangesAsync();
 
         }
     }

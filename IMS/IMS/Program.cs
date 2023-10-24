@@ -19,6 +19,8 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddDbContext<IMSDbContext>(options => {
     options.UseSqlServer(
         builder.Configuration["ConnectionStrings:IMSDbContextConnection"]);

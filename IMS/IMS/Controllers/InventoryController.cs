@@ -13,69 +13,63 @@ namespace IMS.Controllers
         {
             _InventoryRepository = InventoryRepository;
         }
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var allInventory = _InventoryRepository.GetInventory;
-        //    return Ok(allInventory);
-        //}
 
-        //[HttpGet]
-        //public IActionResult Get(int page = 1, int limit = 10)
-        //{
-        //    var inventory = _InventoryRepository.GetInventory(page,limit);
-        //    return Ok(inventory);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get(int page = 1, int limit = 10)
+        {
+            var inventory = await _InventoryRepository.GetInventoryAsync(page,limit);
+            return Ok(inventory);
+        }
 
-        //[HttpGet("{inventory_id}")]
-        //public IActionResult Get(int inventoryId)
-        //{
-        //    var inventory = _InventoryRepository.GetInventoryById(inventoryId);
-        //    return Ok(inventory);
-        //}
+        [HttpGet("{inventory_id}")]
+        public async Task<IActionResult> Get(int inventoryId)
+        {
+            var inventory = await _InventoryRepository.GetInventoryByIdAsync(inventoryId);
+            return Ok(inventory);
+        }
 
-        //[HttpPost]
-        //public IActionResult Post(Inventory inventory)
-        //{
-        //    _InventoryRepository.CreateInventory(inventory);
+        [HttpPost]
+        public async Task<IActionResult> Post(Inventory inventory)
+        {
+            await _InventoryRepository.CreateInventoryAsync(inventory);
 
-        //    return Ok(inventory);
-        //}
+            return Ok(inventory);
+        }
 
-        //[HttpPut("{inventory_id}")]
-        //public async Task<IActionResult> Put(int inventoryId, Inventory inventoryDTO)
-        //{
-        //    if (inventoryId != inventoryDTO.InventoryId)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{inventory_id}")]
+        public async Task<IActionResult> Put(int inventoryId, Inventory inventoryDTO)
+        {
+            if (inventoryId != inventoryDTO.InventoryId)
+            {
+                return BadRequest();
+            }
 
-        //    var inventory = _InventoryRepository.GetInventoryById(inventoryId);
-        //    if (inventory == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var inventory = await _InventoryRepository.GetInventoryByIdAsync(inventoryId);
+            if (inventory == null)
+            {
+                return NotFound();
+            }
 
-        //    _InventoryRepository.UpdateInventory(inventory, inventoryDTO);
+            await _InventoryRepository.UpdateInventoryAsync(inventory, inventoryDTO);
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
-        //[HttpDelete("{inventory_id}")]
-        //public IActionResult DeleteOwner(int inventoryId)
-        //{
-            
-        //    var inventory = _InventoryRepository.GetInventoryById(inventoryId);
-        //    if (inventory == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{inventory_id}")]
+        public async Task<IActionResult> DeleteOwner(int inventoryId)
+        {
 
-        //    _InventoryRepository.DeleteInventory(inventoryId);
+            var inventory = await _InventoryRepository.GetInventoryByIdAsync(inventoryId);
+            if (inventory == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok();
-                       
-        //}
+            await _InventoryRepository.DeleteInventoryAsync(inventoryId);
+
+            return Ok();
+
+        }
 
     }
 }

@@ -2,11 +2,10 @@
 {
     public interface IManufacturerRepository
     {
-        IEnumerable<Manufacturer> AllManufacturers { get; }
-        IEnumerable<Manufacturer> GetManufacturers(int page, int limit);
-        Manufacturer? GetManufacturerById(int id);
-        void CreateManufacturer(Manufacturer manufacturer);
-        void UpdateManufacturer(Manufacturer manufacturer, Manufacturer manufacturerDTO);
-        void DeleteManufacturer(int id);
+        Task<IEnumerable<Manufacturer>> GetManufacturersAsync(int page, int limit);
+        Task<Manufacturer?> GetManufacturerByIdAsync(int id);
+        Task CreateManufacturerAsync(Manufacturer manufacturer);
+        Task UpdateManufacturerAsync(Manufacturer manufacturer, Manufacturer manufacturerDTO);
+        Task DeleteManufacturerAsync(int id);
     }
 }

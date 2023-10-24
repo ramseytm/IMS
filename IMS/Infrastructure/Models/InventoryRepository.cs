@@ -12,54 +12,49 @@ namespace IMS.Models
             _imsDbContext = imsDbContext;
         }
 
-        public IEnumerable<Inventory> AllInventory
+        public async Task<IEnumerable<Inventory>> GetInventoryAsync(int page, int limit)
         {
-            get
-            {
-                return _imsDbContext.Inventory;
-            }
-        }
-
-        public IEnumerable<Inventory> GetInventory(int page, int limit)
-        {
-            return _imsDbContext.Inventory
+            return await _imsDbContext.Inventory
                 .OrderBy(c => c.Product.ProductName)
                 .Skip(page - 1)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
 
         }
 
-        public Inventory? GetInventoryById(int id)
+        public async Task<Inventory?> GetInventoryByIdAsync(int id)
         {
-            return _imsDbContext.Inventory.FirstOrDefault(c => c.InventoryId == id);
+            return await _imsDbContext.Inventory.FirstOrDefaultAsync(c => c.InventoryId == id);
 
         }
 
-        public void CreateInventory(Inventory inventory)
+        public async Task CreateInventoryAsync(Inventory inventory)        
         {
+            _ = await _imsDbContext.Inventory.AddAsync(inventory);
 
-            _imsDbContext.Inventory.Add(inventory);
-
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
-        public void UpdateInventory(Inventory inventory, Inventory inventoryDTO)
+        public async Task UpdateInventoryAsync(Inventory inventory, Inventory inventoryDTO)
         {
             inventory.Product = inventoryDTO.Product;
             inventory.Location = inventoryDTO.Location;
             inventory.Quantity = inventoryDTO.Quantity;
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
 
-        public void DeleteInventory(int id)
+        public async Task DeleteInventoryAsync(int id)       
         {
-            _imsDbContext.Remove(id);
 
-            _imsDbContext.SaveChanges();
+            var inventory = await _imsDbContext.Inventory.FirstOrDefaultAsync(c => c.InventoryId == id);
+            if (inventory != null)
+            {
+                _imsDbContext.Inventory.Remove(inventory);
+            }
 
+            await _imsDbContext.SaveChangesAsync();
         }
 
     }

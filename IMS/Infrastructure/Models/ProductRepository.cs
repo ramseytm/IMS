@@ -12,39 +12,31 @@ namespace IMS.Models
             _imsDbContext = imsDbContext;
         }
 
-        public IEnumerable<Product> AllProducts
+        public async Task<IEnumerable<Product>> GetProductsAsync(int page, int limit)
         {
-            get
-            {
-                return _imsDbContext.Product;
-            }
-        }
-
-        public IEnumerable<Product> GetProducts(int page, int limit)
-        {
-            return _imsDbContext.Product
+            return await _imsDbContext.Product
                 .OrderBy(c => c.ProductName)
                 .Skip(page - 1)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
 
         }
 
-        public Product? GetProductById(int id)
+        public async Task<Product?> GetProductByIdAsync(int id)
         {
-            return _imsDbContext.Product.FirstOrDefault(c => c.ProductId == id);
+            return await _imsDbContext.Product.FirstOrDefaultAsync(c => c.ProductId == id);
 
         }
 
-        public void CreateProduct(Product product)
+        public async Task CreateProductAsync(Product product)
         {
 
-            _imsDbContext.Product.Add(product);
+            _ = await _imsDbContext.Product.AddAsync(product);
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
-        public void UpdateProduct(Product product, Product productDTO)
+        public async Task UpdateProductAsync(Product product, Product productDTO)
         {
             product.ProductName = productDTO.ProductName;
             product.CategoryID = productDTO.CategoryID;
@@ -56,15 +48,19 @@ namespace IMS.Models
             product.MaximumQuantity = productDTO.MaximumQuantity;
             product.UPC = productDTO.UPC;
 
-            _imsDbContext.SaveChanges();
+            _ = await _imsDbContext.SaveChangesAsync();
 
         }
 
-        public void DeleteProduct(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            _imsDbContext.Remove(id);
+            var product = await _imsDbContext.Product.FirstOrDefaultAsync(c => c.ProductId == id);
+            if (product != null)
+            {
+                _imsDbContext.Product.Remove(product);
+            }
 
-            _imsDbContext.SaveChanges();
+            await _imsDbContext.SaveChangesAsync();
 
         }
 

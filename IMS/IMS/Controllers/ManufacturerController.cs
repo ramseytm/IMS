@@ -13,69 +13,63 @@ namespace IMS.Controllers
         {
             _ManufacturerRepository = ManufacturerRepository;
         }
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var allManufacturer = _ManufacturerRepository.AllManufacturers;
-        //    return Ok(allManufacturer);
-        //}
 
-        //[HttpGet]
-        //public IActionResult Get(int page = 1, int limit = 10)
-        //{
-        //    var manufacturer = _ManufacturerRepository.GetManufacturers(page, limit);
-        //    return Ok(manufacturer);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get(int page = 1, int limit = 10)
+        {
+            var manufacturer = await _ManufacturerRepository.GetManufacturersAsync(page, limit);
+            return Ok(manufacturer);
+        }
 
-        //[HttpGet("{manufacturer_id}")]
-        //public IActionResult Get(int manufacturerId)
-        //{
-        //    var manufacturer = _ManufacturerRepository.GetManufacturerById(manufacturerId);
-        //    return Ok(manufacturer);
-        //}
+        [HttpGet("{manufacturer_id}")]
+        public async Task<IActionResult> Get(int manufacturerId)
+        {
+            var manufacturer = await _ManufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
+            return Ok(manufacturer);
+        }
 
-        //[HttpPost]
-        //public IActionResult Post(Manufacturer manufacturer)
-        //{
-        //    _ManufacturerRepository.CreateManufacturer(manufacturer);
+        [HttpPost]
+        public async Task<IActionResult> Post(Manufacturer manufacturer)
+        {
+            await _ManufacturerRepository.CreateManufacturerAsync(manufacturer);
 
-        //    return Ok(manufacturer);
-        //}
+            return Ok(manufacturer);
+        }
 
-        //[HttpPut("{manufacturer_id}")]
-        //public async Task<IActionResult> Put(int manufacturerId, Manufacturer manufacturerDTO)
-        //{
-        //    if (manufacturerId != manufacturerDTO.ManufacturerId)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{manufacturer_id}")]
+        public async Task<IActionResult> Put(int manufacturerId, Manufacturer manufacturerDTO)
+        {
+            if (manufacturerId != manufacturerDTO.ManufacturerId)
+            {
+                return BadRequest();
+            }
 
-        //    var manufacturer = _ManufacturerRepository.GetManufacturerById(manufacturerId);
-        //    if (manufacturer == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var manufacturer = await _ManufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
+            if (manufacturer == null)
+            {
+                return NotFound();
+            }
 
-        //    _ManufacturerRepository.UpdateManufacturer(manufacturer, manufacturerDTO);
+            await _ManufacturerRepository.UpdateManufacturerAsync(manufacturer, manufacturerDTO);
 
-        //    return Ok();
-        //}
+            return Ok();
+        }
 
-        //[HttpDelete("{manufacturer_id}")]
-        //public IActionResult DeleteOwner(int manufacturerId)
-        //{
+        [HttpDelete("{manufacturer_id}")]
+        public async Task<IActionResult> DeleteOwner(int manufacturerId)
+        {
 
-        //    var manufacturer = _ManufacturerRepository.GetManufacturerById(manufacturerId);
-        //    if (manufacturer == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var manufacturer = await _ManufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
+            if (manufacturer == null)
+            {
+                return NotFound();
+            }
 
-        //    _ManufacturerRepository.DeleteManufacturer(manufacturerId);
+            await _ManufacturerRepository.DeleteManufacturerAsync(manufacturerId);
 
-        //    return Ok();
+            return Ok();
 
-        //}
+        }
 
     }
 }
