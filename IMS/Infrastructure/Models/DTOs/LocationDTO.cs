@@ -1,6 +1,6 @@
 namespace IMS.Models
 {
-    public class LocationDTO
+    public class LocationDto
     {
         public int LocationId { get; set; }
 

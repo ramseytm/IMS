@@ -1,4 +1,6 @@
-﻿namespace IMS.Models
+﻿using IMS.Models;
+
+namespace IMS.Infrastructure.Repositories
 {
     public interface IInventoryRepository
     {

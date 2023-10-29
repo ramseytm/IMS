@@ -1,4 +1,5 @@
 using AutoMapper;
+using IMS.Infrastructure.Repositories;
 using IMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,70 +10,70 @@ namespace IMS.Controllers
 
     public class LocationController : ControllerBase
     {
-        private readonly ILocationRepository _LocationRepository;
+        private readonly ILocationRepository _locationRepository;
 
         private readonly IMapper _mapper;
 
-        public LocationController(ILocationRepository LocationRepository, IMapper mapper)
+        public LocationController(ILocationRepository locationRepository, IMapper mapper)
         {
-            _LocationRepository = LocationRepository;
+            _locationRepository = locationRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(int page = 1, int limit = 10)
         {
-            var location = await _LocationRepository.GetLocationsAsync(page, limit);
-            return Ok(_mapper.Map<IEnumerable<LocationDTO>>(location));
+            var location = await _locationRepository.GetLocationsAsync(page, limit);
+            return Ok(_mapper.Map<IEnumerable<LocationDto>>(location));
         }
 
-        [HttpGet("{location_id}")]
+        [HttpGet("{locationId}")]
         public async Task<IActionResult> Get(int locationId)
         {
-            var location = await _LocationRepository.GetLocationByIdAsync(locationId);
-            return Ok(_mapper.Map<LocationDTO>(location));
+            var location = await _locationRepository.GetLocationByIdAsync(locationId);
+            return Ok(_mapper.Map<LocationDto>(location));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(LocationDTO locationDTO)
+        public async Task<IActionResult> Post(LocationDto locationDto)
         {
-            var location = _mapper.Map<Location>(locationDTO);
+            var location = _mapper.Map<Location>(locationDto);
 
-            await _LocationRepository.CreateLocationAsync(location);
+            await _locationRepository.CreateLocationAsync(location);
 
-            return Ok(_mapper.Map<LocationDTO>(location));
+            return Ok(_mapper.Map<LocationDto>(location));
         }
 
-        [HttpPut("{location_id}")]
-        public async Task<IActionResult> Put(int locationId, LocationDTO locationDTO)
+        [HttpPut("{locationId}")]
+        public async Task<IActionResult> Put(int locationId, LocationDto locationDto)
         {
-            if (locationId != locationDTO.LocationId)
+            if (locationId != locationDto.LocationId)
             {
                 return BadRequest();
             }
 
-            var location = await _LocationRepository.GetLocationByIdAsync(locationId);
+            var location = await _locationRepository.GetLocationByIdAsync(locationId);
             if (location == null)
             {
                 return NotFound();
             }
 
-            await _LocationRepository.UpdateLocationAsync(location, _mapper.Map<Location>(locationDTO));
+            await _locationRepository.UpdateLocationAsync(location, _mapper.Map<Location>(locationDto));
 
             return Ok();
         }
 
-        [HttpDelete("{location_id}")]
+        [HttpDelete("{locationId}")]
         public async Task<IActionResult> DeleteOwner(int locationId)
         {
 
-            var location = await _LocationRepository.GetLocationByIdAsync(locationId);
+            var location = await _locationRepository.GetLocationByIdAsync(locationId);
             if (location == null)
             {
                 return NotFound();
             }
 
-            await _LocationRepository.DeleteLocationAsync(locationId);
+            await _locationRepository.DeleteLocationAsync(locationId);
 
             return Ok();
 

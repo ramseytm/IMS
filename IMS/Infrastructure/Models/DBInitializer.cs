@@ -1,4 +1,5 @@
-﻿using IMS.Models;
+﻿using IMS.Infrastructure.Repositories;
+using IMS.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

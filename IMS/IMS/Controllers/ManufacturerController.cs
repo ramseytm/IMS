@@ -1,3 +1,5 @@
+using AutoMapper;
+using IMS.Infrastructure.Repositories;
 using IMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,36 +9,41 @@ namespace IMS.Controllers
     [ApiController]
     public class ManufacturerController : ControllerBase
     {
-        private readonly IManufacturerRepository _ManufacturerRepository;
+        private readonly IManufacturerRepository _manufacturerRepository;
 
-        public ManufacturerController(IManufacturerRepository ManufacturerRepository)
+        private readonly IMapper _mapper;
+
+        public ManufacturerController(IManufacturerRepository manufacturerRepository, IMapper mapper)
         {
-            _ManufacturerRepository = ManufacturerRepository;
+            _manufacturerRepository = manufacturerRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(int page = 1, int limit = 10)
         {
-            var manufacturer = await _ManufacturerRepository.GetManufacturersAsync(page, limit);
-            return Ok(manufacturer);
+            var manufacturer = await _manufacturerRepository.GetManufacturersAsync(page, limit);
+            return Ok(_mapper.Map<IEnumerable<ManufacturerDto>>(manufacturer));
         }
 
-        [HttpGet("{manufacturer_id}")]
+        [HttpGet("{manufacturerId}")]
         public async Task<IActionResult> Get(int manufacturerId)
         {
-            var manufacturer = await _ManufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
-            return Ok(manufacturer);
+            var manufacturer = await _manufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
+            return Ok(_mapper.Map<ManufacturerDto>(manufacturer));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Manufacturer manufacturer)
+        public async Task<IActionResult> Post(ManufacturerDto manufacturerDto)
         {
-            await _ManufacturerRepository.CreateManufacturerAsync(manufacturer);
+            var manufacturer = _mapper.Map<Manufacturer>(manufacturerDto);
 
-            return Ok(manufacturer);
+            await _manufacturerRepository.CreateManufacturerAsync(manufacturer);
+
+            return Ok(_mapper.Map<ManufacturerDto>(manufacturer));
         }
 
-        [HttpPut("{manufacturer_id}")]
+        [HttpPut("{manufacturerId}")]
         public async Task<IActionResult> Put(int manufacturerId, Manufacturer manufacturerDTO)
         {
             if (manufacturerId != manufacturerDTO.ManufacturerId)
@@ -44,28 +51,28 @@ namespace IMS.Controllers
                 return BadRequest();
             }
 
-            var manufacturer = await _ManufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
+            var manufacturer = await _manufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
             if (manufacturer == null)
             {
                 return NotFound();
             }
 
-            await _ManufacturerRepository.UpdateManufacturerAsync(manufacturer, manufacturerDTO);
+            await _manufacturerRepository.UpdateManufacturerAsync(manufacturer, _mapper.Map<Manufacturer>(manufacturerDTO));
 
             return Ok();
         }
 
-        [HttpDelete("{manufacturer_id}")]
+        [HttpDelete("{manufacturerId}")]
         public async Task<IActionResult> DeleteOwner(int manufacturerId)
         {
 
-            var manufacturer = await _ManufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
+            var manufacturer = await _manufacturerRepository.GetManufacturerByIdAsync(manufacturerId);
             if (manufacturer == null)
             {
                 return NotFound();
             }
 
-            await _ManufacturerRepository.DeleteManufacturerAsync(manufacturerId);
+            await _manufacturerRepository.DeleteManufacturerAsync(manufacturerId);
 
             return Ok();
 

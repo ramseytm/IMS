@@ -1,7 +1,7 @@
 ﻿using IMS.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace IMS.Models
+namespace IMS.Infrastructure.Repositories
 {
     public class LocationRepository : ILocationRepository
     {

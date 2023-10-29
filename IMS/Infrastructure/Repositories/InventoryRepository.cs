@@ -1,7 +1,7 @@
 ﻿using IMS.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace IMS.Models
+namespace IMS.Infrastructure.Repositories
 {
     public class InventoryRepository : IInventoryRepository
     {
@@ -15,6 +15,8 @@ namespace IMS.Models
         public async Task<IEnumerable<Inventory>> GetInventoryAsync(int page, int limit)
         {
             return await _imsDbContext.Inventory
+                .Include(c => c.Product)
+                .Include(c => c.Location)
                 .OrderBy(c => c.Product.ProductName)
                 .Skip(page - 1)
                 .Take(limit)
@@ -24,11 +26,14 @@ namespace IMS.Models
 
         public async Task<Inventory?> GetInventoryByIdAsync(int id)
         {
-            return await _imsDbContext.Inventory.FirstOrDefaultAsync(c => c.InventoryId == id);
+            return await _imsDbContext.Inventory
+                .Include(c => c.Product)
+                .Include(c => c.Location)
+                .FirstOrDefaultAsync(c => c.InventoryId == id);
 
         }
 
-        public async Task CreateInventoryAsync(Inventory inventory)        
+        public async Task CreateInventoryAsync(Inventory inventory)
         {
             _ = await _imsDbContext.Inventory.AddAsync(inventory);
 
@@ -45,7 +50,7 @@ namespace IMS.Models
 
         }
 
-        public async Task DeleteInventoryAsync(int id)       
+        public async Task DeleteInventoryAsync(int id)
         {
 
             var inventory = await _imsDbContext.Inventory.FirstOrDefaultAsync(c => c.InventoryId == id);

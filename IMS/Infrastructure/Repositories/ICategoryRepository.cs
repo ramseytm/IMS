@@ -1,6 +1,6 @@
 ﻿using IMS.Models;
 
-namespace IMS.Infrastructure.Models
+namespace IMS.Infrastructure.Repositories
 {
     public interface ICategoryRepository
     {

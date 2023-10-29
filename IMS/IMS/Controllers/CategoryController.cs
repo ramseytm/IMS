@@ -1,4 +1,5 @@
-using IMS.Infrastructure.Models;
+using AutoMapper;
+using IMS.Infrastructure.Repositories;
 using IMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,35 +11,40 @@ namespace IMS.API.Controllers
     {
         private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ICategoryRepository categoryRepository)
+        private readonly IMapper _mapper;
+
+        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(int page = 1, int limit = int.MaxValue)
         {
             var category = await _categoryRepository.GetCategoriesAsync(page, limit);
-            return Ok(category);
+            return Ok(_mapper.Map<IEnumerable<CategoryDto>>(category));
         }
 
         [HttpGet("{categoryId}")]
         public async Task<IActionResult> Get(int categoryId)
         {
             var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
-            return Ok(category);
+            return Ok(_mapper.Map<CategoryDto>(category));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Category category)
+        public async Task<IActionResult> Post(CategoryDto categoryDto)
         {
+            var category = _mapper.Map<Category>(categoryDto);
+
             await _categoryRepository.CreateCategoryAsync(category);
 
-            return Ok(category);
+            return Ok(_mapper.Map<CategoryDto>(category));
         }
 
         [HttpPut("{categoryId}")]
-        public async Task<IActionResult> Put(int categoryId, Category categoryDto)
+        public async Task<IActionResult> Put(int categoryId, CategoryDto categoryDto)
         {
             if (categoryId != categoryDto.CategoryId)
             {
@@ -51,7 +57,7 @@ namespace IMS.API.Controllers
                 return NotFound();
             }
 
-            await _categoryRepository.UpdateCategoryAsync(category, categoryDto);
+            await _categoryRepository.UpdateCategoryAsync(category, _mapper.Map<Category>(categoryDto));
 
             return Ok();
         }

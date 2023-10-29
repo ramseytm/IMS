@@ -1,6 +1,6 @@
 namespace IMS.Models
 {
-    public class Inventory : AuditableEntity
+    public class InventoryDto
     {
         public int InventoryId { get; set; }
 

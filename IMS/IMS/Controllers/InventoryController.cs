@@ -1,3 +1,5 @@
+using AutoMapper;
+using IMS.Infrastructure.Repositories;
 using IMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,65 +9,70 @@ namespace IMS.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
-        private readonly IInventoryRepository _InventoryRepository;
+        private readonly IInventoryRepository _inventoryRepository;
 
-        public InventoryController(IInventoryRepository InventoryRepository)
+        private readonly IMapper _mapper;
+
+        public InventoryController(IInventoryRepository inventoryRepository, IMapper mapper)
         {
-            _InventoryRepository = InventoryRepository;
+            _inventoryRepository = inventoryRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(int page = 1, int limit = 10)
         {
-            var inventory = await _InventoryRepository.GetInventoryAsync(page,limit);
-            return Ok(inventory);
+            var inventory = await _inventoryRepository.GetInventoryAsync(page,limit);
+            return Ok(_mapper.Map<IEnumerable<InventoryDto>>(inventory));
         }
 
-        [HttpGet("{inventory_id}")]
+        [HttpGet("{inventoryId}")]
         public async Task<IActionResult> Get(int inventoryId)
         {
-            var inventory = await _InventoryRepository.GetInventoryByIdAsync(inventoryId);
-            return Ok(inventory);
+            var inventory = await _inventoryRepository.GetInventoryByIdAsync(inventoryId);
+            return Ok(_mapper.Map<InventoryDto>(inventory));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Inventory inventory)
+        public async Task<IActionResult> Post(InventoryDto inventoryDto)
         {
-            await _InventoryRepository.CreateInventoryAsync(inventory);
+            var inventory = _mapper.Map<Inventory>(inventoryDto);
 
-            return Ok(inventory);
+            await _inventoryRepository.CreateInventoryAsync(inventory);
+
+            return Ok(_mapper.Map<InventoryDto>(inventory));
         }
 
-        [HttpPut("{inventory_id}")]
-        public async Task<IActionResult> Put(int inventoryId, Inventory inventoryDTO)
+        [HttpPut("{inventoryId}")]
+        public async Task<IActionResult> Put(int inventoryId, InventoryDto inventoryDto)
         {
-            if (inventoryId != inventoryDTO.InventoryId)
+            if (inventoryId != inventoryDto.InventoryId)
             {
                 return BadRequest();
             }
 
-            var inventory = await _InventoryRepository.GetInventoryByIdAsync(inventoryId);
+            var inventory = await _inventoryRepository.GetInventoryByIdAsync(inventoryId);
             if (inventory == null)
             {
                 return NotFound();
             }
 
-            await _InventoryRepository.UpdateInventoryAsync(inventory, inventoryDTO);
+            await _inventoryRepository.UpdateInventoryAsync(inventory, _mapper.Map<Inventory>(inventoryDto));
 
             return Ok();
         }
 
-        [HttpDelete("{inventory_id}")]
+        [HttpDelete("{inventoryId}")]
         public async Task<IActionResult> DeleteOwner(int inventoryId)
         {
 
-            var inventory = await _InventoryRepository.GetInventoryByIdAsync(inventoryId);
+            var inventory = await _inventoryRepository.GetInventoryByIdAsync(inventoryId);
             if (inventory == null)
             {
                 return NotFound();
             }
 
-            await _InventoryRepository.DeleteInventoryAsync(inventoryId);
+            await _inventoryRepository.DeleteInventoryAsync(inventoryId);
 
             return Ok();
 
