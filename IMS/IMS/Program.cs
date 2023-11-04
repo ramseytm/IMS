@@ -1,3 +1,5 @@
+using IMS.Infrastructure.Models;
+using IMS.Infrastructure.Repositories;
 using IMS.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +14,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<IMSDbContext>(options => {
     options.UseSqlServer(
@@ -34,6 +42,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-DbInitializer.Seed(app);
+await DbInitializer.SeedAsync(app);
 
 app.Run();
