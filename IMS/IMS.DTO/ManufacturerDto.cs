@@ -1,4 +1,4 @@
-namespace IMS.Models
+namespace IMS.DTO
 {
     public class ManufacturerDto
     {
@@ -6,13 +6,13 @@ namespace IMS.Models
 
         public string? ManufacturerName { get; set; }
 
-        public string? Address { get; set; }      
+        public string? Address { get; set; }
 
         public string? ContactPerson { get; set; }
 
-        public string? Email {get; set; }
+        public string? Email { get; set; }
 
-        public string? Phone { get; set;}
+        public string? Phone { get; set; }
 
     }
 }

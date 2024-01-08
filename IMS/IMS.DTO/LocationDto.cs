@@ -1,4 +1,4 @@
-namespace IMS.Models
+namespace IMS.DTO
 {
     public class LocationDto
     {
@@ -6,9 +6,9 @@ namespace IMS.Models
 
         public string? LocationName { get; set; }
 
-        public int? ParentLocation { get; set; }      
-        
-        public string? Description { get; set;}
+        public int? ParentLocation { get; set; }
+
+        public string? Description { get; set; }
 
         public int MaxCapacity { get; set; }
 
