@@ -1,4 +1,5 @@
 using AutoMapper;
+using IMS.DTO;
 using IMS.Models;
 
 namespace SampleMapper.Profiles;

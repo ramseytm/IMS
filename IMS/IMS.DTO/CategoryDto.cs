@@ -1,4 +1,4 @@
-namespace IMS.Models
+namespace IMS.DTO
 {
     public class CategoryDto
     {
@@ -6,9 +6,9 @@ namespace IMS.Models
 
         public string? CategoryName { get; set; }
 
-        public int? ParentCategory { get; set; }      
-        
-        public string? Description { get; set;}
+        public int? ParentCategory { get; set; }
+         
+        public string? Description { get; set; }
 
     }
 }

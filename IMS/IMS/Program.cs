@@ -27,7 +27,19 @@ builder.Services.AddDbContext<IMSDbContext>(options => {
         builder.Configuration["ConnectionStrings:IMSDbContextConnection"]);
 });
 
+builder.Services.AddCors(policy =>
+{
+   policy.AddPolicy("_myAllowSpecificOrigins", builder => 
+    builder.WithOrigins("https://localhost:7038/")
+     .SetIsOriginAllowed((host) => true) // this for using localhost address
+     .AllowAnyMethod()
+     .AllowAnyHeader()
+     .AllowCredentials());
+});
+
 var app = builder.Build();
+
+app.UseCors("_myAllowSpecificOrigins");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

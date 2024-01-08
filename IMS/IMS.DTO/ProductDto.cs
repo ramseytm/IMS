@@ -1,4 +1,4 @@
-namespace IMS.Models
+namespace IMS.DTO
 {
     public class ProductDto
     {
@@ -8,11 +8,11 @@ namespace IMS.Models
 
         public int CategoryID { get; set; }
 
-        public int ManufacturerID { get; set;}
+        public int ManufacturerID { get; set; }
 
         public string? Description { get; set; }
 
-        public decimal UnitPrice { get; set;}
+        public decimal UnitPrice { get; set; }
 
         public int QuantityInStock { get; set; }
 
@@ -20,7 +20,7 @@ namespace IMS.Models
 
         public int MaximumQuantity { get; set; }
 
-        public string? UPC { get; set;}
+        public string? UPC { get; set; }
 
     }
 }
